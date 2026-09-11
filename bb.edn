@@ -1,5 +1,5 @@
 {:tasks
- {:requires ([babashka.process :as p] [clojure.java.io :as io])
+ {:requires ([babashka.process :as p])
 
   info {:doc "task cheat-sheet"
         :task (do (println "lambda-mvp-cljs -- AWS Lambda demo handler in ClojureScript")
