@@ -53,6 +53,12 @@
   teardown {:doc "delete the function + role"
             :task (p/shell "bb" "script/aws_lifecycle.clj" "teardown")}
 
+  bench {:doc "cold/warm boot-time comparison across memory tiers"
+         :task (p/shell "bb" "script/bench_run.clj")}
+
+  demo {:doc "build + deploy + invoke in one go, checking every prerequisite before starting"
+        :task (p/shell "bb" "script/demo.clj")}
+
   smoke {:doc "local smoke: invoke the compiled handler with a canned event (run `bb build` first)"
          :task (if-not (.exists (java.io.File. "dist/index.js"))
                  (do (println "smoke: dist/index.js not found -- run `bb build` first")
