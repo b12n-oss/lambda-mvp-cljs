@@ -8,9 +8,9 @@
   bootstrap binary; the zip just needs dist/index.js with a `handler`
   export. Invoked via `bb deploy`/`bb invoke`/`bb teardown`, or
   directly: `bb script/aws_lifecycle.clj deploy|invoke|teardown`
-  (this project's own compiled handler can't run this file: it needs
-  cheshire.core, which shadow-cljs/Node doesn't bundle, same reason
-  the Jolt/jank versions of this file need babashka too)."
+  (babashka runs this file, not Node -- it needs cheshire.core, which
+  Node/shadow-cljs doesn't have; same reason the Jolt/jank versions of
+  this file need babashka too)."
   (:require [babashka.process :as p]
             [cheshire.core :as json]
             [clojure.string :as str]))

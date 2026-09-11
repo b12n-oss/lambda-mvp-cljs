@@ -42,6 +42,7 @@
                      (println "build: npm install failed")
                      (System/exit exit)))
                  (p/shell {:continue true} "rm" "-f" "dist/package-lock.json")
+                 (p/shell {:continue true} "rm" "-f" "dist/node_modules/.package-lock.json")
                  (let [{:keys [exit]} (p/shell {:continue true :dir "dist"} "zip" "-r" "lambda.zip" ".")]
                    (System/exit exit)))}
 

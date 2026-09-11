@@ -41,8 +41,9 @@ it which CLJS var becomes which property of `module.exports`. Here,
 `net.b12n.lambda-mvp.handler/handler` becomes `module.exports.handler` in
 the compiled `out/index.js`, and that's the entire wiring between this
 project's ClojureScript and AWS's own runtime. `bb build` runs
-`shadow-cljs release lambda`, copies the compiled output plus a trimmed
-`package.json` into `dist/`, and zips it. `bb deploy` points
+`shadow-cljs release lambda` with `--config-merge` pointed straight at
+`dist/index.js`, copies `package.json` into `dist/` unchanged, runs
+`npm install --omit=dev` there, and zips the result. `bb deploy` points
 `--handler index.handler` at that zip, which tells the managed runtime
 "require `index.js`, call its `handler` export." AWS parses the incoming
 event into a plain JS object before the handler ever sees it, calls

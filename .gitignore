@@ -4,5 +4,8 @@ out/
 .shadow-cljs/
 .cpcache/
 .DS_Store
+.superpowers/
+_site/
+*.zip
 AGENTS.md
 CLAUDE.md
