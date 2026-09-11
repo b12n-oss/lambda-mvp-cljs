@@ -5,9 +5,9 @@ using AWS's own **managed `nodejs24.x` runtime**, not a custom one. This
 is the third sibling in the `lambda-mvp-*` family: where
 [lambda-mvp-jlt](https://github.com/b12n-oss/lambda-mvp-jlt) (Jolt)
 implements the Lambda Runtime API contract directly as a
-`provided.al2023` zip, and
-[lambda-mvp-jnk](https://github.com/b12n-oss/lambda-mvp-jnk) (jank) does
-the same inside a container image, this project needs none of that: a
+`provided.al2023` zip, and `lambda-mvp-jnk` (jank, currently private)
+does the same inside a container image, this project needs none of
+that: a
 managed runtime already runs the poll/execute/respond loop internally, so
 the entire deployable is a `shadow-cljs`-compiled handler function and a
 zip. See [docs/guide/managed-runtime.md](docs/guide/managed-runtime.md)
@@ -111,8 +111,8 @@ Not built here, but straightforward follow-ups if you need them:
   canonical ClojureScript-on-Lambda reference this project's deployment
   pattern follows directly.
 - [lambda-mvp-jlt](https://github.com/b12n-oss/lambda-mvp-jlt) (the Jolt
-  sibling) · [lambda-mvp-jnk](https://github.com/b12n-oss/lambda-mvp-jnk)
-  (the jank sibling)
+  sibling) · `lambda-mvp-jnk` (the jank sibling, currently private --
+  link added once it's public)
 - [AWS Lambda Node.js runtime](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html)
 - [docs/guide/cold-warm-boot.md](docs/guide/cold-warm-boot.md) -- the
   real three-way comparison
