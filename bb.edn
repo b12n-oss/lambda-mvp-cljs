@@ -1,9 +1,10 @@
 {:tasks
- {:requires ([babashka.process :as p])
+ {:requires ([babashka.process :as p] [clojure.java.io :as io])
 
   info {:doc "task cheat-sheet"
         :task (do (println "lambda-mvp-cljs -- AWS Lambda demo handler in ClojureScript")
                   (println "")
+                  (println "  bb verify      the complete offline gate: test + build + smoke (what CI runs)")
                   (println "  bb build       shadow-cljs release -> dist/lambda.zip")
                   (println "  bb smoke       local smoke: invoke the compiled handler with a canned event (no AWS)")
                   (println "  bb test        run script/bench.clj's unit tests")
@@ -14,9 +15,9 @@
                   (println "  bb teardown    delete the function + role")
                   (println "  bb clean       remove build artifacts")
                   (println "")
-                  (println "(babashka is required for every task above except the plain node/npm")
-                  (println " commands shadow-cljs itself runs -- test/deploy/invoke/teardown/bench")
-                  (println " shell out to a real `bb` binary internally, same as both siblings.)")
+                  (println "(babashka runs every task above; deploy/invoke/teardown/bench/demo/verify")
+                  (println " additionally shell out to a nested `bb` invocation internally, same")
+                  (println " pattern the Jolt/jank siblings use for their own multi-step tasks.)")
                   (println "")
                   (println "No task hardcodes an AWS profile, account, or region -- see README.md"))}
 
@@ -79,4 +80,10 @@
                                                     "  process.exit(1);"
                                                     "}"
                                                     "console.log('smoke: PASS');"))]
-                   (System/exit exit)))}}}
+                   (System/exit exit)))}
+
+  verify {:doc "the complete offline gate: test + build + smoke (what CI runs)"
+          :task (do
+                  (p/shell "bb" "test")
+                  (p/shell "bb" "build")
+                  (p/shell "bb" "smoke"))}}}

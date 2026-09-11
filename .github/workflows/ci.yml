@@ -1,0 +1,37 @@
+name: CI
+
+# Offline-safe gate only: bb verify (test + build + smoke) needs no
+# AWS account. bb deploy/invoke/bench/teardown are NOT run here --
+# those touch a real AWS account, matching the jank sibling's own
+# ci.yml scoping.
+#
+# Unlike the jank sibling, this repo's full offline gate needs no
+# custom compiler toolchain -- babashka + Node + npm + zip is
+# everything `bb verify` needs, so this workflow runs the COMPLETE
+# local gate, not a reduced subset of it.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+
+      - uses: DeLaGuardo/setup-clojure@13.6.1
+        with:
+          bb: 1.12.196
+
+      - name: Verify (test + build + smoke)
+        run: bb verify
