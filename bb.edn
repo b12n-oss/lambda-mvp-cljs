@@ -1,0 +1,27 @@
+{:tasks
+ {:requires ([babashka.process :as p])
+
+  info {:doc "task cheat-sheet"
+        :task (do (println "lambda-mvp-cljs -- AWS Lambda demo handler in ClojureScript")
+                  (println "")
+                  (println "  bb build       shadow-cljs release -> dist/lambda.zip")
+                  (println "  bb smoke       local smoke: invoke the compiled handler with a canned event (no AWS)")
+                  (println "  bb test        run script/bench.clj's unit tests")
+                  (println "  bb demo        build + deploy + invoke in one go, prerequisites checked first")
+                  (println "  bb deploy      idempotent: IAM role + Lambda function, create or update")
+                  (println "  bb invoke      single ad-hoc invoke, prints response + REPORT line")
+                  (println "  bb bench       cold/warm boot-time comparison across memory tiers")
+                  (println "  bb teardown    delete the function + role")
+                  (println "  bb clean       remove build artifacts")
+                  (println "")
+                  (println "(babashka is required for every task above except the plain node/npm")
+                  (println " commands shadow-cljs itself runs -- test/deploy/invoke/teardown/bench")
+                  (println " shell out to a real `bb` binary internally, same as both siblings.)")
+                  (println "")
+                  (println "No task hardcodes an AWS profile, account, or region -- see README.md"))}
+
+  test {:doc "run script/bench.clj's unit tests"
+        :task (p/shell "bb" "test/bench_test.clj")}
+
+  clean {:doc "remove build artifacts"
+         :task (p/shell "rm" "-rf" "dist" "out" ".shadow-cljs" ".cpcache")}}}

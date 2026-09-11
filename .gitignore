@@ -1,0 +1,8 @@
+node_modules/
+dist/
+out/
+.shadow-cljs/
+.cpcache/
+.DS_Store
+AGENTS.md
+CLAUDE.md

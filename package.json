@@ -1,0 +1,9 @@
+{
+  "name": "lambda-mvp-cljs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AWS Lambda demo handler in ClojureScript, on AWS's managed nodejs24.x runtime",
+  "devDependencies": {
+    "shadow-cljs": "3.5.1"
+  }
+}
