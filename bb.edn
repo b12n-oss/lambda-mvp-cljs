@@ -24,4 +24,44 @@
         :task (p/shell "bb" "test/bench_test.clj")}
 
   clean {:doc "remove build artifacts"
-         :task (p/shell "rm" "-rf" "dist" "out" ".shadow-cljs" ".cpcache")}}}
+         :task (p/shell "rm" "-rf" "dist" "out" ".shadow-cljs" ".cpcache")}
+
+  build {:doc "shadow-cljs release -> dist/lambda.zip"
+         :task (do
+                 (p/shell "rm" "-rf" "dist")
+                 (p/shell "mkdir" "dist")
+                 (let [{:keys [exit]} (p/shell {:continue true} "npx" "shadow-cljs" "release" "lambda"
+                                               "--config-merge" "{:output-to \"dist/index.js\"}")]
+                   (when-not (zero? exit)
+                     (println "build: shadow-cljs release failed")
+                     (System/exit exit)))
+                 (p/shell "cp" "package.json" "dist/package.json")
+                 (let [{:keys [exit]} (p/shell {:continue true :dir "dist"} "npm" "install" "--omit=dev")]
+                   (when-not (zero? exit)
+                     (println "build: npm install failed")
+                     (System/exit exit)))
+                 (p/shell {:continue true} "rm" "-f" "dist/package-lock.json")
+                 (let [{:keys [exit]} (p/shell {:continue true :dir "dist"} "zip" "-r" "lambda.zip" ".")]
+                   (System/exit exit)))}
+
+  smoke {:doc "local smoke: invoke the compiled handler with a canned event (run `bb build` first)"
+         :task (if-not (.exists (java.io.File. "dist/index.js"))
+                 (do (println "smoke: dist/index.js not found -- run `bb build` first")
+                     (System/exit 1))
+                 (let [{:keys [exit]} (p/shell {:continue true} "node" "-e"
+                                               (str "const m = require('./dist/index.js');"
+                                                    "const ctx = {awsRequestId: 'smoke-test-req'};"
+                                                    "const r1 = m.handler({name: 'jolt', n: 1}, ctx);"
+                                                    "const r2 = m.handler({name: 'jank', n: 2}, ctx);"
+                                                    "console.log('invocation 1:', JSON.stringify(r1));"
+                                                    "console.log('invocation 2:', JSON.stringify(r2));"
+                                                    "if (r1.warm_invocation !== 1 || r2.warm_invocation !== 2) {"
+                                                    "  console.error('smoke: warm_invocation did not increment as expected');"
+                                                    "  process.exit(1);"
+                                                    "}"
+                                                    "if (r1.request_id !== 'smoke-test-req') {"
+                                                    "  console.error('smoke: request_id did not come through');"
+                                                    "  process.exit(1);"
+                                                    "}"
+                                                    "console.log('smoke: PASS');"))]
+                   (System/exit exit)))}}}
