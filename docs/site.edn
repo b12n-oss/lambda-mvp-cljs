@@ -1,0 +1,18 @@
+;; Configuration for the documentation site, read by the docs-engine
+;; (https://github.com/jlt-commons/docs-engine).
+;;
+;; Build it locally with `bb site:build`/`bb site:serve` -- see
+;; .github/workflows/site.yml. CI builds it on every push and pull
+;; request, and publishes from main: the PUBLISH_SITE repository
+;; variable is "true" and GitHub Pages is enabled.
+{;; :base-path is what makes this a project site rather than an org one.
+ ;; The site is served at https://b12n-oss.github.io/lambda-mvp-cljs/,
+ ;; so every URL the engine emits needs that prefix. Leave it out and
+ ;; the pages still render, but each one loads the ORGANIZATION site's
+ ;; stylesheet and every asset 404s. The workflow has a check for
+ ;; exactly this (same pattern as both lambda-mvp-* siblings' own
+ ;; site.yml).
+ :base-path   "/lambda-mvp-cljs"
+
+ :title       "lambda-mvp-cljs"
+ :description "AWS Lambda demo handler in ClojureScript on AWS's managed nodejs24.x runtime -- the third lambda-mvp-* sibling, with a real cold/warm boot-time comparison across all three."}
