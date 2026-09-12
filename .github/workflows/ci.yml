@@ -29,9 +29,31 @@ jobs:
         with:
           node-version: "24"
 
+      # shadow-cljs is a JVM tool distributed as an npm package -- it
+      # needs a real JDK on PATH to actually launch, which
+      # DeLaGuardo/setup-clojure does not itself provision (it installs
+      # Clojure/babashka tool BINARIES, not a JDK). Explicit here rather
+      # than relying on whatever JDK ubuntu-latest's image happens to
+      # ship by default, since neither sibling's own CI exercises this
+      # Node+JVM combination to have already proven the ambient default
+      # is sufficient.
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
       - uses: DeLaGuardo/setup-clojure@13.6.1
         with:
           bb: 1.12.196
 
-      - name: Verify (test + build + smoke)
-        run: bb verify
+      # Split into three named steps rather than one `bb verify` call:
+      # a failure's STEP NAME alone then narrows down which of the
+      # three actually broke, without needing the run's full log text.
+      - name: Test (script/bench.clj unit tests)
+        run: bb test
+
+      - name: Build (shadow-cljs release -> dist/lambda.zip)
+        run: bb build
+
+      - name: Smoke (invoke the compiled handler with a canned event)
+        run: bb smoke
