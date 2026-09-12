@@ -23,6 +23,19 @@ Measured against the same AWS account, the same region
 | Warm Duration (median) | 2.0 ms | 1.9 ms | 1.4 ms | 1.3 ms | 1.7 ms | 1.7 ms |
 | Max Memory Used | 317 MB | 317 MB | 26 MB | 26 MB | 81 MB | 83 MB |
 
+**A version note, found after this table was first published:** the Jolt
+column above was measured against jolt v0.8.6 (confirmed by its
+317 MB Max Memory Used, which matches v0.8.6 exactly). `lambda-mvp-jlt`'s
+own repo has since moved its default to v0.8.7, and its own guide
+documents a real, same-function, same-day before/after: Max Memory Used
+roughly halved (317 MB -> 164 MB) and Cold Init Duration dropped
+30-46% at both tiers. So the Jolt column here is an honest, real
+measurement of what v0.8.6 does, not a current reflection of
+`lambda-mvp-jlt`'s own numbers today -- see
+[lambda-mvp-jlt's own cold-warm-boot.md](https://github.com/b12n-oss/lambda-mvp-jlt/blob/main/docs/guide/cold-warm-boot.md#v086-vs-v087-confirmed)
+for the full v0.8.6-vs-v0.8.7 comparison. Re-measuring this three-way
+table against jolt v0.8.7 is a reasonable follow-up, not done here.
+
 Read this as a real, honest comparison, not a controlled experiment. All
 six columns come from a genuine account, region, and day, but they're
 three genuinely different deployment models sitting next to each other:
@@ -73,11 +86,15 @@ artifact-fetch cost from memory-size effects on its own.
   a plausible read of the shape of the numbers, not something isolated by
   a separate microbenchmark here.
 - **Max Memory Used (81/83 MB) sits between jank's 26 MB and Jolt's
-  317 MB, and it tells its own story rather than blending either
-  sibling's.** Jolt's number reflects Chez Scheme's own heap floor, a
-  fixed cost that shows up regardless of how small the actual program is.
-  jank's reflects a native binary with no managed runtime underneath it
-  at all. This project's number sits in between because it's a different
+  317 MB (v0.8.6; see the version note above -- v0.8.7 measures 164 MB
+  on the same function), and it tells its own story rather than
+  blending either sibling's.** Jolt's number reflects Chez Scheme's own
+  runtime overhead, but it's not a fixed, version-independent floor the
+  way an earlier draft of this doc claimed: `lambda-mvp-jlt`'s own
+  v0.8.6-vs-v0.8.7 comparison shows it roughly halving from a jolt
+  version bump alone, on the identical function. jank's reflects a
+  native binary with no managed runtime underneath it at all. This
+  project's number sits in between because it's a different
   kind of thing: V8's own baseline heap plus Node's module-loading
   machinery plus the shadow-cljs-compiled bundle, running on a managed
   high-level VM rather than either a from-scratch native binary or a
