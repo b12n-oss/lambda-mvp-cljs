@@ -45,6 +45,35 @@ AWS's managed `nodejs24.x` runtime. A difference between any two columns
 could be the language, the deployment model, or both at once, and this
 table on its own can't separate those out.
 
+## This project's own re-run, 2026-09-19
+
+The table above stays exactly as it was recorded. This section adds a second
+measurement of this project's own columns, taken a week later when the whole
+`lambda-mvp-*` family was re-benched after jolt released v0.8.9. Same account,
+same region, same tiers, same 5 warm samples:
+
+| Metric | cljs 2048 MB, 2026-09-12 | cljs 2048 MB, 2026-09-19 | cljs 3008 MB, 2026-09-12 | cljs 3008 MB, 2026-09-19 |
+|---|---|---|---|---|
+| Cold Init Duration | 104.6 ms | 110.9 ms | 109.0 ms | 106.2 ms |
+| Cold Duration | 4.1 ms | 4.2 ms | 4.4 ms | 4.1 ms |
+| Warm Duration (median) | 1.7 ms | 1.7 ms | 1.7 ms | 1.6 ms |
+| Max Memory Used | 81 MB | 81 MB | 83 MB | 82 MB |
+
+Nothing in this project changed between those two dates, so the spread here is
+a straight read on how much a repeated `bb bench` moves on its own. Cold Init
+shifted by about 6% at 2048 MB and 3% at 3008 MB, everything else by a
+fraction of a millisecond or a megabyte. That is worth keeping in mind before
+reading any small difference in the six-column table above as meaningful.
+
+The Jolt column specifically is now two versions stale. It was measured at
+jolt v0.8.6, the sibling's default moved to v0.8.7 and then to v0.8.9, and the
+sibling's own guide has a same-day v0.8.7-vs-v0.8.9 comparison over three runs
+per version. See
+[lambda-mvp-jlt's cold-warm-boot.md](https://github.com/b12n-oss/lambda-mvp-jlt/blob/main/docs/guide/cold-warm-boot.md)
+for that, and the
+[five-way comparison](https://github.com/b12n-oss/lambda-mvp-bb/blob/main/docs/guide/five-way-comparison.md)
+for all five siblings measured on one day.
+
 ## The order-effect caveat, checked against this project's own numbers
 
 Both siblings' own guides already flag this: a memory-size change forces
