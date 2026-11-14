@@ -6,18 +6,18 @@ All notable changes to this project are documented here.
 
 ### Added
 - AWS Lambda demo handler in ClojureScript, deployed as a zip to AWS's
-  managed `nodejs24.x` runtime -- no custom Runtime API implementation,
+  managed `nodejs24.x` runtime. It has no custom Runtime API implementation,
   since the managed runtime already provides one.
 - `handler.cljs`: the demo handler, same
   message/runtime/request_id/warm_invocation/event field shape as the
-  Jolt/jank siblings, for a genuinely comparable response across all
+  Jolt/jank siblings, so the response is comparable across all
   three.
 - `bb build`/`bb smoke`/`bb test`/`bb deploy`/`bb invoke`/`bb bench`/
   `bb demo`/`bb teardown`/`bb clean` task suite.
 - Cold/warm boot-time benchmarking (`bb bench`), reusing the Jolt/jank
   siblings' `script/bench.clj` parsing/formatting logic verbatim.
 - `docs/guide/managed-runtime.md` and `docs/guide/cold-warm-boot.md`:
-  the architecture writeup and the real, same-account/same-region/
+  the architecture writeup and the same-account/same-region/
   same-day three-way comparison across all three `lambda-mvp-*`
   siblings.
 
