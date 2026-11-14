@@ -31,7 +31,7 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 env:
-  DOCS_ENGINE_REF: v0.3.2
+  DOCS_ENGINE_REF: v0.4.6
   BASE_PATH: /lambda-mvp-cljs
 
 jobs:
